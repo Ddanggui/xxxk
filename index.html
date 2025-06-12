@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>XXK❤</title>
+		<script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css" />
+		<script src="https://www.layuicdn.com/layui/layui.js"></script>
+		<script type="text/javascript" src="canvas_bg.js"></script>
+		<script>
+			$(function() {
+				
+				//开启弹框
+				 function opendiv(){
+					 layui.use('layer', function(){
+					   var layer = layui.layer;
+					   layer.open({
+					   	type: 1,
+					   	title: "2020倒计时",
+					   	anim: 2,
+					   	area: ['600px', '500px'],
+					   	content: $(".newYear"),
+					   	success: function(layero, index) {},
+					   	yes: function() {}
+					   });
+					  })
+				 }
+				 
+				 var isOpen=1;
+				 var setInterval2=setInterval(function() {
+					 if(new Date().getTime()-new Date("2020/1/2 00:00:00").getTime()>0){
+						 isOpen=-1;
+					 }
+					 if(isOpen==1){
+						isOpen=0;
+						 opendiv();
+					 }else if(isOpen==-1){
+						 return;
+					 }
+					 console.log((new Date("2020/1/1 00:00:00").getTime()-new Date().getTime())/1000)
+					 $(".endSeconds").html(Math.ceil((new Date("2020/1/1 00:00:00").getTime()-new Date().getTime())/1000)+" 秒")
+					 if(new Date("2020/1/1 00:00:00").getTime()-new Date().getTime()<=0){
+						$(".endTitle1").html("2020 年");
+					 	$(".endSeconds").html("祝你事事如意");
+						$(".endTitle2").show();
+						$(".newYear").css("background-image","url(img/gif011.gif)")
+						$(".newYear").append("<img src=\"img/love1.jpg\" alt=\"loveImg\" style=\"height: 280px;border: 10px solid rgba(255,255,205,0.7);\" />")
+						clearInterval(setInterval2);
+					 }
+				 })
+				 
+				var setInterval1=setInterval(function() {
+					let nTime = new Date();
+					dateDiff(nTime, "2025/5/14 0:0:0");
+					// console.log(formartDate(nTime));
+					// console.log("时间差：" + dTime);
+				}, 1000)
+
+				function dateDiff(nTime, sTime) {
+					if (sTime == null || sTime == "") {
+						sTime = "2025/5/14 0:0:0";
+					}
+					let day1 = new Date(sTime).getTime();
+					let iDays = (nTime.getTime() - day1) / (1000 * 60 * 60 * 24); //天数
+					let iHours = (nTime.getTime() - day1) / (1000 * 60 * 60); //小时数
+					let iMinutes = (nTime.getTime() - day1) / (1000 * 60); //分钟数
+					$("#sTime").html("开始时间: " + "2025-5-14 00:00:00");
+					$("#nTime").html("当前时间: " + formartDate(nTime));
+					$("#dDays").html("已经一起: " + iDays.toFixed(13) + "天");
+					$("#dHour").html("<span style='font-family: SimSun;'>只愿君心似我心</span>");
+					$("#dMinutes").html("<span style='font-family: SimSun;'>定不负相思意</span>");
+					// return iHours
+				};
+
+				/*格式化时间  */
+				function formartDate(mTime) {
+					var mYear = mTime.getFullYear();
+					var mMonth = mTime.getMonth() + 1;
+					var mDate = mTime.getDate();
+					var mHours = mTime.getHours();
+					var mMinutes = mTime.getMinutes();
+					var mSeconds = mTime.getSeconds();
+					if (mMinutes < 10) {
+						mMinutes = "0" + mMinutes
+					}
+					if (mSeconds < 10) {
+						mSeconds = "0" + mSeconds
+					}
+					return mYear + "-" + mMonth + "-" + mDate + "  " + mHours + ":" + mMinutes + ":" + mSeconds;
+				}
+
+				/* 音乐点击 */
+				$(".musicBtn").on("click", function() {
+					if ($(".audio1").get(0).paused) {
+						$(".audio1").get(0).play();
+						$(".musicBtn i").addClass("layui-anim-loop")
+					} else {
+						$(".audio1").get(0).pause();
+						$(".musicBtn i").removeClass("layui-anim-loop")
+					}
+
+				})
+			})
+			window.onload = function() {
+			var canvas = document.getElementById('rain');
+			var ctx = canvas.getContext('2d');
+			function resize() {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+			resize();
+			window.onresize = resize;
+
+			var drops = [];
+			var ripples = [];
+			for (var i = 0; i < 120; i++) {
+				drops.push({
+					x: Math.random() * canvas.width,
+					y: Math.random() * canvas.height,
+					l: Math.random() * 20 + 10,
+					xs: Math.random() * 2 - 1,
+					ys: Math.random() * 10 + 10
+				})
+			}
+
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// 画雨滴
+				ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+				ctx.lineWidth = 1;
+				ctx.lineCap = 'round';
+				for (var i = 0; i < drops.length; i++) {
+					var d = drops[i];
+					ctx.beginPath();
+					ctx.moveTo(d.x, d.y);
+					ctx.lineTo(d.x + d.xs, d.y + d.l);
+					ctx.stroke();
+				}
+				// 画波纹
+				for (var i = ripples.length - 1; i >= 0; i--) {
+					var r = ripples[i];
+					ctx.beginPath();
+					ctx.arc(r.x, r.y, r.radius, 0, 2 * Math.PI);
+					ctx.strokeStyle = 'rgba(174,194,224,' + r.alpha + ')';
+					ctx.lineWidth = 2;
+					ctx.stroke();
+					r.radius += 0.7;
+					r.alpha -= 0.012;
+					if (r.alpha <= 0) {
+						ripples.splice(i, 1);
+					}
+				}
+				move();
+			}
+
+			function move() {
+				for (var i = 0; i < drops.length; i++) {
+					var d = drops[i];
+					d.x += d.xs;
+					d.y += d.ys;
+					if (d.y > canvas.height) {
+						// 产生波纹
+						ripples.push({
+							x: d.x,
+							y: canvas.height - 2,
+							radius: 2,
+							alpha: 0.5
+						});
+						d.x = Math.random() * canvas.width;
+						d.y = -20;
+					}
+				}
+			}
+
+			function loop() {
+				draw();
+				requestAnimationFrame(loop);
+			}
+			loop();
+		}
+			layui.use('layer', function() {
+				var layer = layui.layer;
+				layer.config({
+					extend: 'extend/layer.ext.js'
+				});
+			});
+		</script>
+		<style>
+			* {
+				cursor: pointer;
+			}
+
+			/* ...existing code... */
+			body {
+				background-color: #fbfbfb; /* 建议改为黑色，提升体验 */
+			}
+			/* ...existing code... */
+
+			#div1 {
+			position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				text-align: center;
+			}
+
+			.loveName {
+				color: #8b737c;
+				font-family: 'Pacifico', 'ZCOOL QingKe HuangYou', cursive, sans-serif;
+				font-weight: bold;
+				font-size: 120px;
+				height: 200px;
+				text-shadow: 4px 4px 16px #eec1e6, 0 0 10px #ffb6e9;
+				letter-spacing: 8px;
+				background: linear-gradient(90deg, #ffb6e9 10%, #b5c6e0 90%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+
+			.lTime {
+				margin: 0 auto;
+				text-align: center;
+				font-size: 96px;
+				color: #74e1f0;
+				font-family: 'ZCOOL QingKe HuangYou', 'Pacifico', cursive, sans-serif;
+				text-shadow: 2px 2px 8px #0ce3e3, 0 0 6px #fff;
+			}
+
+			#author {
+				 position: absolute;
+				left: 75%;
+				top: 75%;
+				text-align: center;
+				font-size: 36px;
+				color: #fff;
+				font-family: 'ZCOOL QingKe HuangYou', cursive, sans-serif;
+				text-shadow: 1px 1px 6px #b5c6e0;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 在<body>最前面或最后面添加 -->
+		<canvas id="rain" style="position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:1;"></canvas>
+		<video id="bgVideo" autoplay loop muted playsinline
+        style="position: fixed; right: 0; bottom: 0; min-width: 100vw; min-height: 100vh; width: auto; height: auto; z-index: -2; object-fit: cover;">
+        <source src="marooned_by_VISUALDON_loop.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+   		 </video>
+		<canvas id="c" style="position: absolute;z-index: -99;text-align: center;top: -20px;left: -20px; background: transparent;"></canvas>
+		<div id="div1">
+			<div class="loveName">XZY❤XXK</div>
+			<div id="loveTime" class="loveTime">
+				<div id="sTime" class="lTime"></div><br />
+				<div id="nTime" class="lTime"></div><br />
+				<div id="dDays" class="lTime"></div><br />
+				<div id="dHour" class="lTime"></div><br />
+				<div id="dMinutes" class="lTime"></div><br />
+			</div>
+		</div>
+		<button class="musicBtn  ">
+			<i class="layui-icon layui-icon-headset layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 28px;position: fixed;left: 51px;top: 100px;"></i>
+		</button>
+		<audio autoplay="autoplay" loop class="audio1">
+			<source src="yuai.mp3" type="audio/mpeg">
+		</audio>
+		<div class="newYear" style="font-size: 30px;color: #0FCECE;text-align: center;display: none">
+			<br />
+			<h2 class="endTitle1">距离2020年还剩余：</h2> 
+			<br />
+			<h1 style="font-size: 88px;color: aqua;" class="endSeconds">50秒</h1>
+			<br />
+			<h2 class="endTitle2" style="font-size: 88px;color: red;display: none;">❤❤</h2>
+			<br />
+		</div>
+		<footer id="author">
+			<p></p>
+			<p></p>
+		</footer>
+	</body>
+</html>
